@@ -1,6 +1,7 @@
 from datetime import date
 # from sqlalchemy import DateTime
-from maybewrite import db, login_manager,app
+from maybewrite import db, login_manager
+from flask import current_app
 from flask_login import UserMixin
 # from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 # from itsdangerous import JSONWebSignatureSerializer as Serializer
@@ -21,29 +22,29 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
 
     # def get_reset_token(self, expires_sec=1800):
-    #     s = Serializer(app.config['SECRET_KEY'], expires_sec)
+    #     s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
     #     return s.dumps({'user_id': self.id}).decode('utf-8')
 
     # def get_reset_token(self, expires_sec=1800):
-    #     s = Serializer(app.config['SECRET_KEY'], expires_in=expires_sec)
+    #     s = Serializer(current_app.config['SECRET_KEY'], expires_in=expires_sec)
     #     return s.dumps({'user_id': self.id}).decode('utf-8')
     
     # def get_reset_token(self, expires_sec=1800):
-    #     s = serializer(app.config['SECRET_KEY'])
+    #     s = serializer(current_app.config['SECRET_KEY'])
     #     return s.dumps({'user_id': self.id}, max_age=expires_sec).decode('utf-8')
     
     # def get_reset_token(self, expires_sec=1800):
-    #     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'], expires_in = 3600)
-    #     token = serializer.dumps({'user_id': self.id}, salt=app.config['SECURITY_PASSWORD_SALT'])
+    #     serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'], expires_in = 3600)
+    #     token = serializer.dumps({'user_id': self.id}, salt=current_app.config['SECURITY_PASSWORD_SALT'])
     #     return token
     def get_reset_token(self, expires_sec=1800):
-        serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        token = serializer.dumps({'user_id': self.id}, salt=app.config['SECURITY_PASSWORD_SALT'])
+        serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+        token = serializer.dumps({'user_id': self.id}, salt=current_app.config['SECURITY_PASSWORD_SALT'])
         return token
 
     @staticmethod
     def verify_reset_token(token):
-        s=URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        s=URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']
         except:
