@@ -33,6 +33,7 @@ with app.app_context():
     # db.drop_all()
     
     # db.create_all()
+    
     users=User.query.all()
     for user in users:
         print(user)

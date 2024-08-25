@@ -1,0 +1,2 @@
+import itsdangerous
+print(itsdangerous.__version__)
